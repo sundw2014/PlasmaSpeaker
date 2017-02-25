@@ -159,10 +159,10 @@ void PendSV_Handler(void)
 * Output         : None
 * Return         : None
 *******************************************************************************/
-void SysTick_Handler(void)
-{
-    TimingDelay--;
-}
+// void SysTick_Handler(void)
+// {
+//     TimingDelay--;
+// }
 
 /******************************************************************************/
 /*            STM32 Peripherals Interrupt Handlers                        */

@@ -28,6 +28,9 @@
 
 extern void USART_printf(USART_TypeDef* USARTx, char *Data, ...);
 
+#define Debug_USART USART1
+#define Debug_BaudRate 115200
+#define DBG_Init USART_Config(Debug_USART, Debug_BaudRate);
 #define DBG_MSG(format, ...) USART_printf(Debug_USART, "[Debug]%s: " format "\r\n", __func__, ##__VA_ARGS__)
 #define ERR_MSG(format, ...) USART_printf(Debug_USART, "[Error]%s: " format "\r\n", __func__, ##__VA_ARGS__)
 #define REPORT(info_type, format, ...) USART_printf(BT_USART, "!I#%s#" format "\r\n", info_type, ##__VA_ARGS__)

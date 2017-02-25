@@ -96,6 +96,8 @@ SRC += $(wildcard $(SRC_DIR)../Libraries/STM32F10x_StdPeriph_Driver/src/*.c)
 SRC += $(wildcard $(SRC_DIR)../Libraries/STM32_USB-FS-Device_Driver/src/*.c)
 SRC += $(wildcard $(SRC_DIR)../Project/src/*.c)
 SRC += $(wildcard $(SRC_DIR)../Project/src/usb/src/*.c)
+SRC += $(wildcard $(SRC_DIR)../Project/src/micro-ecc/*.c)
+SRC += $(wildcard $(SRC_DIR)../Project/src/lowlevel/*.c)
 
 # List C source files here which must be compiled in ARM-Mode.
 # use file-extension c for "c-only"-files
@@ -104,6 +106,7 @@ SRCARM  =
 # List C++ source files here.
 # use file-extension cpp for C++-files (use extension .cpp)
 CPPSRC =
+CPPSRC += $(wildcard $(SRC_DIR)../Project/src/u2f.cpp)
 
 # List C++ source files here which must be compiled in ARM-Mode.
 # use file-extension cpp for C++-files (use extension .cpp)
@@ -153,6 +156,7 @@ LINKERSCRIPTPATH = ./
 #EXTRAINCDIRS = ../.. ../../utils ../../lib_src
 EXTRAINCDIRS = $(SRC_DIR)../Project/include
 EXTRAINCDIRS += $(SRC_DIR)../Project/src/usb/inc
+EXTRAINCDIRS += $(SRC_DIR)../Project/src/micro-ecc
 EXTRAINCDIRS += $(SRC_DIR)../Libraries/STM32F10x_StdPeriph_Driver/inc
 EXTRAINCDIRS += $(SRC_DIR)../Libraries/STM32_USB-FS-Device_Driver/inc
 EXTRAINCDIRS += $(SRC_DIR)../Libraries/CMSIS/Device/ST/STM32F10x/Include

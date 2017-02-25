@@ -31,12 +31,13 @@
 #include "stm32f10x.h"
 #include "usb_lib.h"
 #include "usb_istr.h"
-
+#include "common.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint8_t Receive_Buffer[2];
+uint8_t Receive_Buffer[64];
+uint8_t newData = 0;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 /*******************************************************************************
@@ -48,11 +49,10 @@ uint8_t Receive_Buffer[2];
 *******************************************************************************/
 void EP1_OUT_Callback(void)
 {
-  BitAction Led_State;
-
+  DBG_MSG("hello");
   /* Read received data (2 bytes) */
   USB_SIL_Read(EP1_OUT, Receive_Buffer);
-
+  newData = 1;
   SetEPRxStatus(ENDP1, EP_RX_VALID);
 
 }
