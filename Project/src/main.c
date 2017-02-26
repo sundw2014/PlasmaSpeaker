@@ -5,6 +5,7 @@
 #include "usb_pwr.h"
 #include "usart.h"
 #include "time.h"
+#include "eeprom.h"
 
 #include "sha256.h"
 #include "uECC.h"
@@ -23,6 +24,13 @@ int main(void)
     USBCommon_Init();
     USB_Init();
     u2f_init();
+
+    /* Unlock the Flash Program Erase controller */
+    FLASH_Unlock();
+
+    /* EEPROM Init */
+    EE_Init();
+
     while (1)
     {
         // DBG_MSG("alive");

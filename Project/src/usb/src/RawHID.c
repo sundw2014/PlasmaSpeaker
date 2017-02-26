@@ -18,6 +18,8 @@ uint32_t RawHID_recv(uint8_t *buffer, uint32_t length)
 {
     if(newData){
         memcpy(buffer, Receive_Buffer, length);
+        newData = 0;
+        SetEPRxStatus(ENDP1, EP_RX_VALID);
         return length;
     }
     else

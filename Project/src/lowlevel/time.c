@@ -26,8 +26,10 @@ uint32_t micros()
 
 void delayMicroseconds(uint32_t micros)
 {
-    uint32_t stop_micros_counter = micros_counter + micros;
-    while (micros_counter < stop_micros_counter);
+    int t=micros*36;
+    for(;t--;t>0);
+    // uint32_t stop_micros_counter = micros_counter + micros;
+    // while (micros_counter < stop_micros_counter);
 }
 
 void delayMillis(uint32_t millis)

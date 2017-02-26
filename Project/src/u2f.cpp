@@ -8,12 +8,15 @@ void USART_printf(USART_TypeDef* USARTx, char *Data, ...);
 #include "time.h"
 #include "RawHID.h"
 #include <cstring>
+#include "eeprom.h"
 }
 
 #undef DEBUG
 #define DEBUG
 #undef DESKTOP_TEST
 // #define DESKTOP_TEST
+
+// #define SIMULATE_BUTTON
 
 typedef uint8_t byte;
 
@@ -153,6 +156,35 @@ extern "C" {
 }  // extern "C"
 #endif
 
+#ifndef DESKTOP_TEST
+#ifdef DEBUG
+char itoh(uint8_t i)
+{
+	if(i<10)
+	{
+		return i+'0';
+	}
+	else{
+		return (i-10)+'A';
+	}
+}
+void dump_hex(byte *buffer, int len)
+{
+	char hex[200];
+	len = len>64?64:len;
+	int i = 0;
+	for ( ; i < len; i++) {
+		hex[3*i] = itoh((buffer[i]&0xF0)>>4);
+		hex[3*i+1] = itoh(buffer[i]&0x0F);
+		hex[3*i+2] = ' ';
+	}
+	hex[3*i] = '\0';
+	DBG_MSG("%s",hex);
+}
+
+#endif
+#endif
+
 #define TIMEOUT_VALUE 1000
 
 typedef struct SHA256_HashContext {
@@ -250,7 +282,7 @@ int allocate_channel(int channel_id)
 int initResponse(byte *buffer)
 {
 #ifdef DEBUG
-	// Serial.print("INIT RESPONSE");
+	DBG_MSG("INIT RESPONSE");
 #endif
 	int cid = *(int*)buffer;
 #ifdef DEBUG
@@ -345,13 +377,9 @@ void respondErrorPDU(byte *buffer, int err)
 void sendLargeResponse(byte *request, int len)
 {
 #ifdef DEBUG
-	// Serial.print("Sending large response ");
+	DBG_MSG("Sending large response,len=%d",len);
 	// DBG_MSG(len);
-	for (int i = 0; i < len; i++) {
-		// Serial.print(large_resp_buffer[i], HEX);
-		// Serial.print(" ");
-	}
-	// Serial.println("\n--\n");
+	dump_hex(large_resp_buffer,len);
 #endif
 	memcpy(resp_buffer, request, 4); //copy cid
 	resp_buffer[4] = U2FHID_MSG;
@@ -364,6 +392,7 @@ void sendLargeResponse(byte *request, int len)
 	memcpy(resp_buffer + 7, large_resp_buffer, r);
 
 	RawHID_send(resp_buffer, 64);
+	delayMicroseconds(2500);
 	len -= r;
 	byte p = 0;
 	int offset = MAX_INITIAL_PACKET;
@@ -378,19 +407,22 @@ void sendLargeResponse(byte *request, int len)
 	}
 }
 
-static int _counter;
+// static int _counter;
 int getCounter() {
-	// unsigned int eeAddress = 0; //EEPROM address to start reading from
-	// unsigned int counter;
-	// EEPROM.get( eeAddress, counter );
-	return _counter;
+	uint16_t eeAddress = 0; //EEPROM address to start reading from
+	uint16_t counter;
+	EE_ReadVariable( eeAddress, &counter );
+	DBG_MSG("counter=%d",counter);
+	return counter;
 }
 
 void setCounter(int counter)
 {
-	// unsigned int eeAddress = 0; //EEPROM address to start reading from
+	DBG_MSG("counter=%d",counter);
+	uint16_t eeAddress = 0; //EEPROM address to start reading from
 	// EEPROM.put( eeAddress, counter );
-	_counter=counter;
+	EE_WriteVariable(eeAddress, counter);
+	// _counter=counter;
 }
 
 #ifdef SIMULATE_BUTTON
@@ -402,16 +434,11 @@ void processMessage(byte *buffer)
 {
 	int len = buffer[5] << 8 | buffer[6];
 #ifdef DEBUG
-	// Serial.println(F("Got message"));
-	// Serial.println(len);
-	// DBG_MSG(F("Data:"));
+	DBG_MSG("Got message, len=%d", len);
 #endif
 	byte *message = buffer + 7;
 #ifdef DEBUG
-	for (int i = 7; i < 7+len; i++) {
-		// Serial.print(buffer[i], HEX);
-	}
-	// DBG_MSG(F(""));
+	dump_hex(buffer+7, len);
 #endif
 	//todo: check CLA = 0
 	byte CLA = message[0];
@@ -452,17 +479,9 @@ void processMessage(byte *buffer)
 			public_k[0] = 0x04;
 #ifdef DEBUG
 			DBG_MSG("Public K");
-			for (size_t i =0; i < sizeof(public_k); i++) {
-				// Serial.print(public_k[i], HEX);
-				// Serial.print(" ");
-			}
-			// DBG_MSG("");
+			dump_hex(public_k,sizeof(public_k));
 			DBG_MSG("Private K");
-			for (size_t i =0; i < sizeof(private_k); i++) {
-				// Serial.print(private_k[i], HEX);
-				// Serial.print(" ");
-			}
-			// DBG_MSG("");
+			dump_hex(private_k,sizeof(private_k));
 #endif
 			//construct hash
 
@@ -478,48 +497,28 @@ void processMessage(byte *buffer)
 			sha256_update(&ctx, large_resp_buffer, 1);
 #ifdef DEBUG
 			DBG_MSG("App Parameter:");
-			for (int i =0; i < 32; i++) {
-				// Serial.print(application_parameter[i], HEX);
-				// Serial.print(" ");
-			}
-			// DBG_MSG("");
+			dump_hex(application_parameter,32);
 #endif
 			sha256_update(&ctx, application_parameter, 32);
 #ifdef DEBUG
 			DBG_MSG("Chal Parameter:");
-			for (int i =0; i < 32; i++) {
-				// Serial.print(challenge_parameter[i], HEX);
-				// Serial.print(" ");
-			}
-			// DBG_MSG("");
+			dump_hex(challenge_parameter,32);
 #endif
 			sha256_update(&ctx, challenge_parameter, 32);
 #ifdef DEBUG
 			DBG_MSG("Handle Parameter:");
-			for (int i =0; i < 64; i++) {
-				// Serial.print(handle[i], HEX);
-				// Serial.print(" ");
-			}
-			// DBG_MSG("");
+			dump_hex(handle,64);
 #endif
 			sha256_update(&ctx, handle, 64);
 			sha256_update(&ctx, public_k, 65);
 #ifdef DEBUG
 			DBG_MSG("Public key:");
-			for (int i =0; i < 65; i++) {
-				// Serial.print(public_k[i], HEX);
-				// Serial.print(" ");
-			}
-			// DBG_MSG("");
+			dump_hex(public_k,65);
 #endif
 			sha256_final(&ctx, sha256_hash);
 #ifdef DEBUG
 			DBG_MSG("Hash:");
-			for (int i =0; i < 32; i++) {
-				// // Serial.print(sha256_hash[i], HEX);
-				// // Serial.print(" ");
-			}
-			// DBG_MSG("");
+			dump_hex(sha256_hash,32);
 #endif
 
 			uint8_t *signature = resp_buffer; //temporary
@@ -586,7 +585,7 @@ void processMessage(byte *buffer)
 		break;
 	case U2F_INS_AUTHENTICATE:
 		{
-
+DBG_MSG("U2F_INS_AUTHENTICATE");
 			//minimum is 64 + 1 + 64
 			if (reqlength!=(64+1+64)) {
 				respondErrorPDU(buffer, SW_WRONG_LENGTH);
@@ -625,8 +624,10 @@ void processMessage(byte *buffer)
 			}
 
 			if (P1==0x07) { //check-only
+				DBG_MSG("check-only");
 				respondErrorPDU(buffer, SW_CONDITIONS_NOT_SATISFIED);
 			} else if (P1==0x03) { //enforce-user-presence-and-sign
+				DBG_MSG("enforce");
 				int counter = getCounter();
 				SHA256_CTX ctx;
 				sha256_init(&ctx);
@@ -758,6 +759,7 @@ void processPacket(byte *buffer)
 			DBG_MSG("SENT RESPONSE 3");
 #endif
 			RawHID_send(buffer, 64);
+			delayMicroseconds(2500);
 			len -= MAX_INITIAL_PACKET;
 			byte p = 0;
 			int offset = 7 + MAX_INITIAL_PACKET;
@@ -798,24 +800,6 @@ void setOtherTimeout()
 
 int cont_start = 0;
 
-#ifndef DESKTOP_TEST
-#ifdef DEBUG
-
-void dump_hex(byte *buffer, int len)
-{
-	for (int i = 0 ; i < len; i++) {
-	    if (buffer[i] <= 0xf) {
-	       // Serial.print(0);
-	    }
-	    // Serial.print(buffer[i], HEX);
-	    // Serial.print(" ");
-	}
-	// // Serial.println();
-}
-
-#endif
-#endif
-
 extern "C" {
 void u2f_loop() {
 	int n;
@@ -827,16 +811,15 @@ void u2f_loop() {
 
 #ifdef DEBUG
 #ifndef DESKTOP_TEST
-       // Serial.print("RAW_RECV: ");
        dump_hex(recv_buffer, n);
 #endif
-		// Serial.print(F("\n\nReceived packet, CID: "));
+		DBG_MSG("Received packet, CID: ");
 #endif
 		//int cid = *(int*)recv_buffer;
 		int cid; //handle strict-aliasing warning
 		memcpy(&cid, recv_buffer, sizeof(cid));
 #ifdef DEBUG
-		// Serial.println(cid, HEX);
+		DBG_MSG("cid:%d",cid);
 #endif
 		if (cid==0) {
 			errorResponse(recv_buffer, ERR_INVALID_CID);
@@ -921,7 +904,7 @@ void u2f_loop() {
 			processPacket(recv_buffer);
 			channel_states[cidx].state= STATE_CHANNEL_WAIT_PACKET;
 		} else {
-
+DBG_MSG("continuation packet");
 			if (channel_states[cidx].state!=STATE_CHANNEL_WAIT_CONT) {
 #ifdef DEBUG
 				DBG_MSG("ignoring stray packet");
@@ -932,6 +915,7 @@ void u2f_loop() {
 
 			//this is a continuation
 			if (cmd_or_cont != expected_next_packet) {
+				DBG_MSG("cmd_or_cont:%d != expected_next_packet:%d", cmd_or_cont, expected_next_packet);
 				errorResponse(recv_buffer, ERR_INVALID_SEQ); //invalid sequence
 				channel_states[cidx].state= STATE_CHANNEL_WAIT_PACKET;
 				return;

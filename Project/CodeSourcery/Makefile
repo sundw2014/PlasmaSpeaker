@@ -98,6 +98,7 @@ SRC += $(wildcard $(SRC_DIR)../Project/src/*.c)
 SRC += $(wildcard $(SRC_DIR)../Project/src/usb/src/*.c)
 SRC += $(wildcard $(SRC_DIR)../Project/src/micro-ecc/*.c)
 SRC += $(wildcard $(SRC_DIR)../Project/src/lowlevel/*.c)
+SRC += $(wildcard $(SRC_DIR)../Project/src/eeprom/*.c)
 
 # List C source files here which must be compiled in ARM-Mode.
 # use file-extension c for "c-only"-files
@@ -157,6 +158,7 @@ LINKERSCRIPTPATH = ./
 EXTRAINCDIRS = $(SRC_DIR)../Project/include
 EXTRAINCDIRS += $(SRC_DIR)../Project/src/usb/inc
 EXTRAINCDIRS += $(SRC_DIR)../Project/src/micro-ecc
+EXTRAINCDIRS += $(SRC_DIR)../Project/src/eeprom
 EXTRAINCDIRS += $(SRC_DIR)../Libraries/STM32F10x_StdPeriph_Driver/inc
 EXTRAINCDIRS += $(SRC_DIR)../Libraries/STM32_USB-FS-Device_Driver/inc
 EXTRAINCDIRS += $(SRC_DIR)../Libraries/CMSIS/Device/ST/STM32F10x/Include

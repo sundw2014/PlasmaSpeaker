@@ -34,7 +34,7 @@
 #include "usb_prop.h"
 #include "usb_desc.h"
 #include "usb_pwr.h"
-
+#include "common.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -177,8 +177,8 @@ void CustomHID_Reset(void)
   SetEPType(ENDP1, EP_INTERRUPT);
   SetEPTxAddr(ENDP1, ENDP1_TXADDR);
   SetEPRxAddr(ENDP1, ENDP1_RXADDR);
-  SetEPTxCount(ENDP1, 2);
-  SetEPRxCount(ENDP1, 2);
+  SetEPTxCount(ENDP1, 64);
+  SetEPRxCount(ENDP1, 64);
   SetEPRxStatus(ENDP1, EP_RX_VALID);
   SetEPTxStatus(ENDP1, EP_TX_NAK);
 
@@ -398,7 +398,8 @@ uint8_t *CustomHID_GetStringDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *CustomHID_GetReportDescriptor(uint16_t Length)
 {
-  return Standard_GetDescriptorData(Length, &CustomHID_Report_Descriptor);
+  // DBG_MSG("report desc len:%d",Length);
+   return Standard_GetDescriptorData(Length, &CustomHID_Report_Descriptor);
 }
 
 /*******************************************************************************

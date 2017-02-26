@@ -32,12 +32,16 @@
 #include "usb_lib.h"
 #include "usb_istr.h"
 #include "common.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint8_t Receive_Buffer[64];
 uint8_t newData = 0;
+static __IO uint8_t _transferComplete=1;
+uint8_t * const transferComplete = &_transferComplete;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 /*******************************************************************************
@@ -49,12 +53,9 @@ uint8_t newData = 0;
 *******************************************************************************/
 void EP1_OUT_Callback(void)
 {
-  DBG_MSG("hello");
   /* Read received data (2 bytes) */
   USB_SIL_Read(EP1_OUT, Receive_Buffer);
   newData = 1;
-  SetEPRxStatus(ENDP1, EP_RX_VALID);
-
 }
 
 /*******************************************************************************
@@ -66,6 +67,8 @@ void EP1_OUT_Callback(void)
 *******************************************************************************/
 void EP1_IN_Callback(void)
 {
+    DBG_MSG("hello");
+    _transferComplete = 1;
   // PrevXferComplete = 1;
 }
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

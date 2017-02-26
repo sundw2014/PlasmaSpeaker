@@ -49,10 +49,10 @@ const uint8_t CustomHID_DeviceDescriptor[CUSTOMHID_SIZ_DEVICE_DESC] =
     0x00,                       /*bDeviceSubClass*/
     0x00,                       /*bDeviceProtocol*/
     0x40,                       /*bMaxPacketSize40*/
-    0x83,                       /*idVendor (0x0483)*/
-    0x04,
-    0x10,                       /*idProduct = 0x5750*/
-    0x57,
+    0x50,                       /*idVendor (0x0483)*/
+    0x10,
+    0x13,                       /*idProduct = 0x5750*/
+    0x01,
     0x00,                       /*bcdDevice rel. 2.00*/
     0x02,
     1,                          /*Index of string descriptor describing
@@ -130,7 +130,7 @@ const uint8_t CustomHID_ConfigDescriptor[CUSTOMHID_SIZ_CONFIG_DESC] =
   ; /* CustomHID_ConfigDescriptor */
 const uint8_t CustomHID_ReportDescriptor[CUSTOMHID_SIZ_REPORT_DESC] =
   {
-    0x06, 0xF1, 0xD0,      /* USAGE_PAGE (Vendor Page: 0xFF00) */
+    0x06, 0xD0, 0xF1,      /* USAGE_PAGE (Vendor Page: 0xFF00) */
     0x09, 0x01,            /* USAGE (Demo Kit)               */
     0xa1, 0x01,            /* COLLECTION (Application)       */
     /* 7 */
@@ -142,6 +142,10 @@ const uint8_t CustomHID_ReportDescriptor[CUSTOMHID_SIZ_REPORT_DESC] =
     0x25, 0xFF,            /*     LOGICAL_MAXIMUM (255)        */
     0x75, 0x08,            /*     REPORT_SIZE (8)            */
     0x95, 0x01,            /*     REPORT_COUNT (1)           */
+    0xB1, 0x82,             /*    FEATURE (Data,Var,Abs,Vol) */
+
+0x85, 0x01,            /*     REPORT_ID (1)              */
+0x09, 0x20,            /*     USAGE (LED 1)              */
     0x81, 0x82,             /*    INPUT (Data,Var,Abs,Vol) */
     /* 21 */
 
@@ -152,7 +156,11 @@ const uint8_t CustomHID_ReportDescriptor[CUSTOMHID_SIZ_REPORT_DESC] =
     0x25, 0xFF,            /*     LOGICAL_MAXIMUM (255)        */
     0x75, 0x08,            /*     REPORT_SIZE (8)            */
     0x95, 0x01,            /*     REPORT_COUNT (1)           */
-    0x91, 0x82,            /*     OUTPUT (Data,Var,Abs,Vol)  */
+    0xB1, 0x82,             /*    FEATURE (Data,Var,Abs,Vol) */
+
+0x85, 0x02,            /*     REPORT_ID (1)              */
+0x09, 0x21,            /*     USAGE (LED 1)              */
+0x91, 0x82,            /*     OUTPUT (Data,Var,Abs,Vol)  */
     /* 35 */
 
     0xc0 	          /*     END_COLLECTION	             */
