@@ -132,6 +132,7 @@ uint8_t *CustomHID_SetReport_Feature(uint16_t Length);
 *******************************************************************************/
 void CustomHID_init(void)
 {
+    DBG_MSG(" ");
   /* Update the serial number string descriptor with the data from the unique
   ID*/
   Get_SerialNum();
@@ -155,6 +156,8 @@ void CustomHID_init(void)
 *******************************************************************************/
 void CustomHID_Reset(void)
 {
+    DBG_MSG(" ");
+
   /* Set CustomHID_DEVICE as not configured */
   pInformation->Current_Configuration = 0;
   pInformation->Current_Interface = 0;/*the default Interface*/
@@ -196,19 +199,11 @@ void CustomHID_Reset(void)
 *******************************************************************************/
 void CustomHID_SetConfiguration(void)
 {
+    DBG_MSG(" ");
   if (pInformation->Current_Configuration != 0)
   {
     /* Device configured */
     bDeviceState = CONFIGURED;
-
-    /* Start ADC Software Conversion */
-#if defined(STM32L1XX_MD) || defined(STM32L1XX_HD)|| defined(STM32L1XX_MD_PLUS)|| defined(STM32F37X)
-    ADC_SoftwareStartConv(ADC1);
-#elif defined (STM32F30X)
-    ADC_StartConversion(ADC1);
-#else
-    ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-#endif /* STM32L1XX_XD */
   }
 }
 /*******************************************************************************
@@ -220,6 +215,7 @@ void CustomHID_SetConfiguration(void)
 *******************************************************************************/
 void CustomHID_SetDeviceAddress (void)
 {
+    DBG_MSG(" ");
   bDeviceState = ADDRESSED;
 }
 /*******************************************************************************
@@ -231,6 +227,7 @@ void CustomHID_SetDeviceAddress (void)
 *******************************************************************************/
 void CustomHID_Status_In(void)
 {
+    DBG_MSG(" ");
 }
 
 /*******************************************************************************
@@ -242,6 +239,7 @@ void CustomHID_Status_In(void)
 *******************************************************************************/
 void CustomHID_Status_Out (void)
 {
+    DBG_MSG(" ");
 }
 
 /*******************************************************************************
@@ -253,6 +251,7 @@ void CustomHID_Status_Out (void)
 *******************************************************************************/
 RESULT CustomHID_Data_Setup(uint8_t RequestNo)
 {
+    DBG_MSG(" ");
   uint8_t *(*CopyRoutine)(uint16_t);
 
   if (pInformation->USBwIndex != 0)
@@ -313,6 +312,7 @@ RESULT CustomHID_Data_Setup(uint8_t RequestNo)
 *******************************************************************************/
 uint8_t *CustomHID_SetReport_Feature(uint16_t Length)
 {
+    DBG_MSG(" ");
   if (Length == 0)
   {
     pInformation->Ctrl_Info.Usb_wLength = 2;
@@ -333,6 +333,7 @@ uint8_t *CustomHID_SetReport_Feature(uint16_t Length)
 *******************************************************************************/
 RESULT CustomHID_NoData_Setup(uint8_t RequestNo)
 {
+    DBG_MSG(" ");
   if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
       && (RequestNo == SET_PROTOCOL))
   {
@@ -341,6 +342,7 @@ RESULT CustomHID_NoData_Setup(uint8_t RequestNo)
 
   else
   {
+    DBG_MSG("USB_UNSUPPORT");
     return USB_UNSUPPORT;
   }
 }
@@ -354,6 +356,7 @@ RESULT CustomHID_NoData_Setup(uint8_t RequestNo)
 *******************************************************************************/
 uint8_t *CustomHID_GetDeviceDescriptor(uint16_t Length)
 {
+    DBG_MSG(" ");
   return Standard_GetDescriptorData(Length, &Device_Descriptor);
 }
 
@@ -366,6 +369,7 @@ uint8_t *CustomHID_GetDeviceDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *CustomHID_GetConfigDescriptor(uint16_t Length)
 {
+    DBG_MSG(" ");
   return Standard_GetDescriptorData(Length, &Config_Descriptor);
 }
 
@@ -378,6 +382,7 @@ uint8_t *CustomHID_GetConfigDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *CustomHID_GetStringDescriptor(uint16_t Length)
 {
+    DBG_MSG(" ");
   uint8_t wValue0 = pInformation->USBwValue0;
   if (wValue0 > 4)
   {
@@ -398,6 +403,7 @@ uint8_t *CustomHID_GetStringDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *CustomHID_GetReportDescriptor(uint16_t Length)
 {
+    DBG_MSG(" ");
   // DBG_MSG("report desc len:%d",Length);
    return Standard_GetDescriptorData(Length, &CustomHID_Report_Descriptor);
 }
@@ -411,6 +417,7 @@ uint8_t *CustomHID_GetReportDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *CustomHID_GetHIDDescriptor(uint16_t Length)
 {
+    DBG_MSG(" ");
   return Standard_GetDescriptorData(Length, &CustomHID_Hid_Descriptor);
 }
 
@@ -425,6 +432,7 @@ uint8_t *CustomHID_GetHIDDescriptor(uint16_t Length)
 *******************************************************************************/
 RESULT CustomHID_Get_Interface_Setting(uint8_t Interface, uint8_t AlternateSetting)
 {
+    DBG_MSG(" ");
   if (AlternateSetting > 0)
   {
     return USB_UNSUPPORT;
@@ -445,6 +453,7 @@ RESULT CustomHID_Get_Interface_Setting(uint8_t Interface, uint8_t AlternateSetti
 *******************************************************************************/
 RESULT CustomHID_SetProtocol(void)
 {
+    DBG_MSG(" ");
   uint8_t wValue0 = pInformation->USBwValue0;
   ProtocolValue = wValue0;
   return USB_SUCCESS;
@@ -459,6 +468,7 @@ RESULT CustomHID_SetProtocol(void)
 *******************************************************************************/
 uint8_t *CustomHID_GetProtocolValue(uint16_t Length)
 {
+    DBG_MSG(" ");
   if (Length == 0)
   {
     pInformation->Ctrl_Info.Usb_wLength = 1;

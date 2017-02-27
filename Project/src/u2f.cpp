@@ -168,6 +168,8 @@ char itoh(uint8_t i)
 		return (i-10)+'A';
 	}
 }
+extern "C"{
+
 void dump_hex(byte *buffer, int len)
 {
 	char hex[200];
@@ -181,7 +183,7 @@ void dump_hex(byte *buffer, int len)
 	hex[3*i] = '\0';
 	DBG_MSG("%s",hex);
 }
-
+}
 #endif
 #endif
 

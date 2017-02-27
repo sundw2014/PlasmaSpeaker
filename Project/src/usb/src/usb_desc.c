@@ -79,7 +79,7 @@ const uint8_t CustomHID_ConfigDescriptor[CUSTOMHID_SIZ_CONFIG_DESC] =
     0x01,         /* bConfigurationValue: Configuration value */
     0x00,         /* iConfiguration: Index of string descriptor describing
                                  the configuration*/
-    0xC0,         /* bmAttributes: Self powered */
+    0x80,         /* bmAttributes: Self powered */
     0x32,         /* MaxPower 100 mA: this current is used for detecting Vbus */
 
     /************** Descriptor of Custom HID interface ****************/
@@ -97,7 +97,7 @@ const uint8_t CustomHID_ConfigDescriptor[CUSTOMHID_SIZ_CONFIG_DESC] =
     /* 18 */
     0x09,         /* bLength: HID Descriptor size */
     HID_DESCRIPTOR_TYPE, /* bDescriptorType: HID */
-    0x10,         /* bcdHID: HID Class Spec release number */
+    0x11,         /* bcdHID: HID Class Spec release number */
     0x01,
     0x00,         /* bCountryCode: Hardware target country */
     0x01,         /* bNumDescriptors: Number of HID class descriptors to follow */
@@ -111,7 +111,7 @@ const uint8_t CustomHID_ConfigDescriptor[CUSTOMHID_SIZ_CONFIG_DESC] =
 
     0x81,          /* bEndpointAddress: Endpoint Address (IN) */
     0x03,          /* bmAttributes: Interrupt endpoint */
-    64,          /* wMaxPacketSize: 64 Bytes max */
+    0xFF,          /* wMaxPacketSize: 64 Bytes max */
     0x00,
     5,          /* bInterval: Polling Interval (32 ms) */
     /* 34 */
@@ -122,7 +122,7 @@ const uint8_t CustomHID_ConfigDescriptor[CUSTOMHID_SIZ_CONFIG_DESC] =
     0x01,	/* bEndpointAddress: */
 			/*	Endpoint Address (OUT) */
     0x03,	/* bmAttributes: Interrupt endpoint */
-    64,	/* wMaxPacketSize: 64 Bytes max  */
+    255,	/* wMaxPacketSize: 64 Bytes max  */
     0x00,
     5,	/* bInterval: Polling Interval (20 ms) */
     /* 41 */
