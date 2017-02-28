@@ -107,7 +107,7 @@ const char attestation_der[] = "\x30\x82\x01\x3c\x30\x81\xe4\xa0\x03\x02"
 	"\x10\xdf";
 
 //key handle: (private key + app parameter) ^ this array
-const char handlekey[] = "-YOHANES-NUGROHO-YOHANES-NUGROHO-";
+const char handlekey[] = "SKYWORKS-innovation201605-stm32--";
 
 const struct uECC_Curve_t * curve = uECC_secp256r1(); //P-256
 uint8_t private_k[36]; //32

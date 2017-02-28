@@ -49,8 +49,8 @@ const uint8_t CustomHID_DeviceDescriptor[CUSTOMHID_SIZ_DEVICE_DESC] =
     0x00,                       /*bDeviceSubClass*/
     0x00,                       /*bDeviceProtocol*/
     0x40,                       /*bMaxPacketSize40*/
-    0xFE,                       /*idVendor (0x0483)*/
-    0xFF,
+    0x50,                       /*idVendor (0x0483)*/
+    0x10,
     0x13,                       /*idProduct = 0x5750*/
     0x01,
     0x00,                       /*bcdDevice rel. 2.00*/
