@@ -394,7 +394,7 @@ void sendLargeResponse(byte *request, int len)
 	memcpy(resp_buffer + 7, large_resp_buffer, r);
 
 	RawHID_send(resp_buffer, 64);
-	delayMicroseconds(2500);
+	// delayMicroseconds(2500);
 	len -= r;
 	byte p = 0;
 	int offset = MAX_INITIAL_PACKET;
@@ -405,7 +405,7 @@ void sendLargeResponse(byte *request, int len)
 		RawHID_send(resp_buffer, 64);
 		len-= MAX_CONTINUATION_PACKET;
 		offset += MAX_CONTINUATION_PACKET;
-		delayMicroseconds(2500);
+		// delayMicroseconds(2500);
 	}
 }
 
@@ -761,7 +761,7 @@ void processPacket(byte *buffer)
 			DBG_MSG("SENT RESPONSE 3");
 #endif
 			RawHID_send(buffer, 64);
-			delayMicroseconds(2500);
+			// delayMicroseconds(2500);
 			len -= MAX_INITIAL_PACKET;
 			byte p = 0;
 			int offset = 7 + MAX_INITIAL_PACKET;
@@ -772,7 +772,7 @@ void processPacket(byte *buffer)
 				RawHID_send(resp_buffer, 64);
 				len-= MAX_CONTINUATION_PACKET;
 				offset += MAX_CONTINUATION_PACKET;
-				delayMicroseconds(2500);
+				// delayMicroseconds(2500);
 			}
 #ifdef DEBUG
 			DBG_MSG("Sending large ping response");

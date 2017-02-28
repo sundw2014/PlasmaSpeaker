@@ -39,8 +39,8 @@
 /* Private variables ---------------------------------------------------------*/
 uint8_t Receive_Buffer[64];
 uint8_t newData = 0;
-static __IO uint8_t _transferComplete=1;
-uint8_t * const transferComplete = &_transferComplete;
+// static __IO uint8_t _transferComplete=1;
+// uint8_t * const transferComplete = &_transferComplete;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -67,8 +67,8 @@ void EP1_OUT_Callback(void)
 *******************************************************************************/
 void EP1_IN_Callback(void)
 {
-    DBG_MSG("hello");
-    _transferComplete = 1;
+    // DBG_MSG("hello");
+    // _transferComplete = 1;
   // PrevXferComplete = 1;
 }
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

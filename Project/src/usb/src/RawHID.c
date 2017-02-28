@@ -14,9 +14,9 @@ void RawHID_send(uint8_t *buffer, uint32_t length)
     /* Write the descriptor through the endpoint */
     DBG_MSG("length = %d",length);
     dump_hex(buffer,length);
-
-        USB_SIL_Write(EP1_IN, buffer, length);
-        SetEPTxValid(ENDP1);
+    while(GetEPTxStatus(ENDP1)==EP_TX_VALID);
+    USB_SIL_Write(EP1_IN, buffer, length);
+    SetEPTxValid(ENDP1);
 }
 
 uint32_t RawHID_recv(uint8_t *buffer, uint32_t length)
